@@ -14,8 +14,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Log the accent color whenever it changes
-  useEffect(() => {
-  }, [accent]);
+  // useEffect(() => {
+  // }, [accent]);
 
   const handleSelectedSong = (song, index) => {
     setSelectedSong(song);
