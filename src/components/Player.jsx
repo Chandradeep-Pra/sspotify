@@ -10,7 +10,7 @@ const Player = ({selectedSong}) => {
       audio.src = selectedSong.url;
       audio.load()
       audio.play()
-      setIsPlaying(!isPlaying)
+      setIsPlaying(true)
     }
   },[selectedSong])
 
