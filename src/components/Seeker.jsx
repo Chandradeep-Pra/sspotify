@@ -54,7 +54,7 @@ const Seeker = ({ currentTime, duration, onSeek }) => {
     <div className='w-full flex flex-col items-center mt-6'>
       <div
         ref={seekerRef}
-        className='relative w-[80%] h-2 bg-white rounded-full cursor-pointer mt-2'
+        className='relative w-[80%] h-2 bg-white/[0.6] rounded-full cursor-pointer mt-2'
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onMouseDown={handleMouseDown}
@@ -63,14 +63,14 @@ const Seeker = ({ currentTime, duration, onSeek }) => {
       >
         {/* Progress bar */}
         <div
-          className='absolute top-0 left-0 h-full bg-blue-500 rounded-full'
+          className='absolute top-0 left-0 h-full bg-white rounded-full'
           style={{ width: `${(currentTime / duration) * 100}%` }}
         />
         {/* Seeker handle */}
-        <div
+        {/* <div
           ref={handleRef}
           className='absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-4 w-4 bg-blue-500 rounded-full'
-        />
+        /> */}
       </div>
       <div className='flex justify-between w-[80%] text-white mt-1'>
         {/* Display current time and duration */}

@@ -6,28 +6,22 @@ import Tracks from './components/Tracks';
 import Player from './components/Player';
 
 function App() {
-  // Active tab state
+  // State to track the active tab
   const [activeTab, setActiveTab] = useState('for-you');
-  
-  // List of songs and selected song state
   const [songs, setSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
-  
-  // Accent color state for styling
-  const [accent, setAccent] = useState(['bg-zinc-800']);
-  
-  // Current song index state
+  const [accent, setAccent] = useState('bg-zinc-800');
   const [currentSongIndex, setCurrentSongIndex] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Handle song selection
+  // Handler for selecting a song
   const handleSelectedSong = (song, index) => {
     setSelectedSong(song);
-    setCurrentSongIndex(index);    
-    console.log(song.accent);
-    console.log(accent);
+    setCurrentSongIndex(index);
+    //setAccent(song.accent || 'bg-zinc-800'); // Update accent color if available
   };
 
-  // Play next song
+  // Play the next song in the list
   const playNextSong = () => {
     if (songs.length === 0 || currentSongIndex === null) return;
     const nextIndex = (currentSongIndex + 1) % songs.length;
@@ -35,44 +29,54 @@ function App() {
     setCurrentSongIndex(nextIndex);
   };
 
-  // Play previous song
+  // Play the previous song in the list
   const playPreviousSong = () => {
     if (songs.length === 0 || currentSongIndex === null) return;
     const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     setSelectedSong(songs[prevIndex]);
     setCurrentSongIndex(prevIndex);
   };
-  
+
+  // Filter songs based on search query
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  // Filter songs based on search query and active tab
+  const filteredSongs = songs.filter((song) => {
+    const matchesQuery = song.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      song.artist.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (activeTab === 'for-you') {
+      return matchesQuery;
+    } else if (activeTab === 'top-tracks') {
+      return matchesQuery && song.top_track;
+    }
+    return matchesQuery;
+  });
+
   return (
     <div className={`w-full h-[100vh] grid grid-cols-7 ${accent}`}>
-      {/* Left sidebar */}
       <div className="col-span-1 flex flex-col justify-between">
         <ProfileSection />
         <div className="h-[24px] w-[24px] rounded-full bg-slate-600 mx-4 my-6"></div>
       </div>
-      
-      {/* Main content area */}
       <div className="col-span-2 flex flex-col gap-2">
         <Tracktab activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div>
-          <Search />
-        </div>
-        <div>
-          <Tracks 
-            activeTab={activeTab} 
-            handleSelectedSong={handleSelectedSong} 
-            setSongs={setSongs} 
-            selectedSong={selectedSong} 
-          />
-        </div>
+        <Search onSearch={handleSearch} />
+        <Tracks
+          activeTab={activeTab}
+          handleSelectedSong={handleSelectedSong}
+          setSongs={setSongs}
+          selectedSong={selectedSong}
+          songs={filteredSongs}
+        />
       </div>
-      
-      {/* Player controls */}
       <div className="col-span-4">
-        <Player 
-          selectedSong={selectedSong} 
+        <Player
+          selectedSong={selectedSong}
           onNextSong={playNextSong}
-          onPrevSong={playPreviousSong} 
+          onPrevSong={playPreviousSong}
         />
       </div>
     </div>
