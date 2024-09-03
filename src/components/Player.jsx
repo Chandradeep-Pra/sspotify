@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
 
-const Player = ({selectedSong}) => {
+const Player = ({selectedSong, onNextSong, onPrevSong}) => {
   //console.log(selectedSong);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audio, setAudio] = useState(new Audio());
-
+  const defaultSong = {
+    name: 'Select a Song',
+    artist: 'Select a song',
+    cover: 'https://c1.wallpaperflare.com/preview/638/495/740/earphones-headphones-black-music.jpg',
+  }
+  
   useEffect(() => {
     if (selectedSong){
       audio.src = selectedSong.url;
       audio.load()
       audio.play()
       setIsPlaying(true)
+      console.log(selectedSong);
+      
+      
     }
   },[selectedSong])
 
@@ -22,17 +30,22 @@ const Player = ({selectedSong}) => {
     }
     setIsPlaying(!isPlaying);
   }
+
+  
+
   return ( 
-selectedSong &&
+
     <div className='flex h-full flex-col py-6 w-full justify-center items-center px-6 '>
-        <h1 className='text-white font-bold text-2xl'>{selectedSong.name}</h1>
-        <h1 className='text-white/[0.6] text-xs'>{selectedSong.artist}</h1>
-        <img className='w-[60vh] h-[60vh] bg-violet-700 mt-6 rounded-lg' src={`https://cms.samespace.com/assets/${selectedSong.cover}`} />
+        <h1 className='text-white font-bold text-2xl'>{selectedSong ? selectedSong.name : defaultSong.name}</h1>
+        <h1 className='text-white/[0.6] text-xs'>{selectedSong ? selectedSong.artist : defaultSong.artist}</h1>
+        <img className='w-[60vh] h-[60vh] bg-violet-700 mt-6 rounded-lg' src={ selectedSong ?`https://cms.samespace.com/assets/${selectedSong.cover}` : defaultSong.cover} />
         <div className='w-[60%] h-1 bg-white mt-6 rounded-full'></div>
         <div className='flex w-[60%] justify-around mt-6 cursor-pointer'>
             <div className='h-[36px] w-[36px] rounded-full bg-slate-400 text-white text-center font-bold'>. . .</div>
             <div className='flex gap-2'>
-              <div className='px-2 py-2  items-center justify-center'>
+
+              {/* Previous */}
+              <div className='px-2 py-2  items-center justify-center' onClick={onPrevSong}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="size-6 hover:fill-white">
                   <path d="M9.195 18.44c1.25.714 2.805-.189 2.805-1.629v-2.34l6.945 3.968c1.25.715 2.805-.188 2.805-1.628V8.69c0-1.44-1.555-2.343-2.805-1.628L12 11.029v-2.34c0-1.44-1.555-2.343-2.805-1.628l-7.108 4.061c-1.26.72-1.26 2.536 0 3.256l7.108 4.061Z" />
                 </svg>
@@ -51,8 +64,9 @@ selectedSong &&
               
              }
 
+              {/* Next */}
               </div>
-              <div className='px-2 py-2  items-center justify-center'>
+              <div className='px-2 py-2  items-center justify-center' onClick={onNextSong}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="size-6 hover:fill-white">
                 <path d="M5.055 7.06C3.805 6.347 2.25 7.25 2.25 8.69v8.122c0 1.44 1.555 2.343 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.343 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256l-7.108-4.061C13.555 6.346 12 7.249 12 8.689v2.34L5.055 7.061Z" />
             </svg>

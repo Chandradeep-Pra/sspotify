@@ -8,15 +8,37 @@ import Player from './components/Player';
 function App() {
   // State to track the active tab
   const [activeTab, setActiveTab] = useState('for-you');
+  const [songs, setSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
   const [accent, setAccent] = useState(['bg-zinc-800']);
+  const [currentSongIndex, setCurrentSongIndex] = useState(null);
 
-  const handleSelectedSong = (song) => {
+ 
+
+  const handleSelectedSong = (song,index) => {
     setSelectedSong(song);
+    setCurrentSongIndex(index);    
     console.log(song.accent);
-    setAccent(`bg-[${song.accent}]`);
+    // setAccent(`bg-[${song.accent}]`);
     console.log(accent);
   };
+
+  const playNextSong = () => {
+    console.log(songs.length);
+    
+    if (songs.length === 0 || currentSongIndex === null) return;
+    const nextIndex = (currentSongIndex + 1) % songs.length;
+    setSelectedSong(songs[nextIndex]);
+    setCurrentSongIndex(nextIndex);
+  };
+
+  const playPreviousSong = () => {
+    if (songs.length === 0 || currentSongIndex === null) return;
+    const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    setSelectedSong(songs[prevIndex]);
+    setCurrentSongIndex(prevIndex);
+  };
+  
 
   return (
     <div className={`w-full h-[100vh] grid grid-cols-7 ${accent}`}>
@@ -30,11 +52,12 @@ function App() {
           <Search />
         </div>
         <div>
-          <Tracks activeTab={activeTab} handleSelectedSong={handleSelectedSong} />
+          <Tracks activeTab={activeTab} handleSelectedSong={handleSelectedSong} setSongs={setSongs}  />
         </div>
       </div>
       <div className="col-span-4">
-        <Player selectedSong={selectedSong} />
+        <Player selectedSong={selectedSong} onNextSong={playNextSong}
+          onPrevSong={playPreviousSong} />
       </div>
     </div>
   );
