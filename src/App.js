@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfileSection from './components/ProfileSection';
 import Tracktab from './components/Tracktab';
 import Search from './components/Search';
@@ -6,22 +6,26 @@ import Tracks from './components/Tracks';
 import Player from './components/Player';
 
 function App() {
-  // State to track the active tab
   const [activeTab, setActiveTab] = useState('for-you');
   const [songs, setSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
-  const [accent, setAccent] = useState('bg-zinc-800');
+  const [accent, setAccent] = useState('#1f1f1f'); // Default color
   const [currentSongIndex, setCurrentSongIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Handler for selecting a song
+  // Log the accent color whenever it changes
+  useEffect(() => {
+  }, [accent]);
+
   const handleSelectedSong = (song, index) => {
     setSelectedSong(song);
     setCurrentSongIndex(index);
-    //setAccent(song.accent || 'bg-zinc-800'); // Update accent color if available
+    console.log('Selected song:', song);
+    
+    // Update the accent color
+    setAccent(song.accent);
   };
 
-  // Play the next song in the list
   const playNextSong = () => {
     if (songs.length === 0 || currentSongIndex === null) return;
     const nextIndex = (currentSongIndex + 1) % songs.length;
@@ -29,7 +33,6 @@ function App() {
     setCurrentSongIndex(nextIndex);
   };
 
-  // Play the previous song in the list
   const playPreviousSong = () => {
     if (songs.length === 0 || currentSongIndex === null) return;
     const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
@@ -37,12 +40,10 @@ function App() {
     setCurrentSongIndex(prevIndex);
   };
 
-  // Filter songs based on search query
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  // Filter songs based on search query and active tab
   const filteredSongs = songs.filter((song) => {
     const matchesQuery = song.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       song.artist.toLowerCase().includes(searchQuery.toLowerCase());
@@ -56,7 +57,12 @@ function App() {
   });
 
   return (
-    <div className={`w-full h-[100vh] grid grid-cols-7 ${accent}`}>
+    <div 
+      style={{ backgroundColor: accent,
+        transition: 'background-color 1s ease'
+       }}
+      className="w-full h-screen grid grid-cols-7"
+    >
       <div className="col-span-1 flex flex-col justify-between">
         <ProfileSection />
         <div className="h-[24px] w-[24px] rounded-full bg-slate-600 mx-4 my-6"></div>
